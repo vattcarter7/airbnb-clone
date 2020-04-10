@@ -13,6 +13,10 @@
     padding-bottom: 6px;
 }
 
+.single-venue .image {
+    width: 66%;
+}
+
 .single-venue .location-details{
     margin-top: 30px;
 }

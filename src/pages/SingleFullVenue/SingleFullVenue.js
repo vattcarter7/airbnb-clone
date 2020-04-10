@@ -69,7 +69,7 @@ const SingleFullVenue = ({ match }) => {
   return (
     <div className='row single-venue'>
       <div className='col s12 center'>
-        <img src={imageUrl} alt={imageUrl} />
+        <img className='image' src={imageUrl} alt={imageUrl} />
       </div>
       <div className='col s8 location-details offset-s2'>
         <div className='col s8 left-details'>
