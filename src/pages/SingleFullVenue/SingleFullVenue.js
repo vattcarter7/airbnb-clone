@@ -9,7 +9,7 @@ const SingleFullVenue = ({ match }) => {
     singleVenue: {},
     allPoints: [],
   });
-  
+
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [numberOfGuests, setNumberOfGuests] = useState(1);
@@ -17,18 +17,17 @@ const SingleFullVenue = ({ match }) => {
   useEffect(() => {
     const vId = match.params.vid;
     const singleVenueUrl = `${window.apiHost}/venue/${vId}`;
-    const pointsUrl = `${window.apiHost}/points/get`;
+    const allPointsUrl = `${window.apiHost}/points/get`;
 
     const resolveDataPromises = [];
 
     resolveDataPromises.push(axios.get(singleVenueUrl));
-    resolveDataPromises.push(axios.get(pointsUrl));
+    resolveDataPromises.push(axios.get(allPointsUrl));
 
     Promise.all(resolveDataPromises).then((data) => {
       const singleVenue = data[0].data;
       const allPoints = data[1].data;
-      console.log(singleVenue);
-      console.log(allPoints);
+
       setResolveData({
         singleVenue,
         allPoints,
@@ -111,13 +110,13 @@ const SingleFullVenue = ({ match }) => {
               value={numberOfGuests}
             >
               <option value='1'>1 Guest</option>
-              <option value='2'>2 Guest</option>
-              <option value='3'>3 Guest</option>
-              <option value='4'>4 Guest</option>
-              <option value='5'>5 Guest</option>
-              <option value='6'>6 Guest</option>
-              <option value='7'>7 Guest</option>
-              <option value='8'>8 Guest</option>
+              <option value='2'>2 Guests</option>
+              <option value='3'>3 Guests</option>
+              <option value='4'>4 Guests</option>
+              <option value='5'>5 Guests</option>
+              <option value='6'>6 Guests</option>
+              <option value='7'>7 Guests</option>
+              <option value='8'>8 Guests</option>
             </select>
           </div>
           <div className='col s12 center'>
