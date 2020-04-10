@@ -1,4 +1,6 @@
 > This is my prefered way for this project
+> All converted from class components to hooks
+
 
 ## Routes used for first version:
 ### Base API URL - https://airbnb-api.robertbunch.dev

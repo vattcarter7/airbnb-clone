@@ -7,8 +7,9 @@ import Point from './Point';
 const SingleFullVenue = ({ match }) => {
   const [resolveData, setResolveData] = useState({
     singleVenue: {},
-    points: [],
+    allPoints: [],
   });
+  
   const [checkIn, setCheckIn] = useState('');
   const [checkOut, setCheckOut] = useState('');
   const [numberOfGuests, setNumberOfGuests] = useState(1);
@@ -25,12 +26,12 @@ const SingleFullVenue = ({ match }) => {
 
     Promise.all(resolveDataPromises).then((data) => {
       const singleVenue = data[0].data;
-      const points = data[1].data;
+      const allPoints = data[1].data;
       console.log(singleVenue);
-      console.log(points);
+      console.log(allPoints);
       setResolveData({
         singleVenue,
-        points,
+        allPoints,
       });
     });
   }, [match]);
@@ -58,11 +59,12 @@ const SingleFullVenue = ({ match }) => {
     amenities,
     rating,
     pricePerNight,
+    points,
   } = resolveData.singleVenue;
 
-  const { points } = resolveData.points;
+  const { allPoints } = resolveData;
 
-  if (!resolveData.singleVenue || resolveData.points.length === 0) {
+  if (!resolveData.singleVenue || resolveData.allPoints.length === 0) {
     return <Spinner />;
   }
 
@@ -75,17 +77,15 @@ const SingleFullVenue = ({ match }) => {
         <div className='col s8 left-details'>
           <div className='location'>{location}</div>
           <div className='title'>{title}</div>
-          <div className='guests'>{guests}</div>
-
+          <div className='guests'>{guests} guests</div>
           <div className='divider'></div>
-
           {points &&
             points
               .split(',')
               .map((point, i) => (
-                <Point key={i} pointDesc={points} point={point} />
+                <Point key={i} pointDesc={allPoints} point={point} />
               ))}
-
+          <div className='divider'></div>
           <div className='details'>{details}</div>
           <div className='amenities'>{amenities}</div>
         </div>
