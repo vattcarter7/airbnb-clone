@@ -1,3 +1,5 @@
+> This is my prefered way for this project
+
 ## Routes used for first version:
 ### Base API URL - https://airbnb-api.robertbunch.dev
 - /cities/recommended
