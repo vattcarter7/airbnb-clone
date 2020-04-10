@@ -1,96 +1,134 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import './SingleFullVenue.css';
 import axios from 'axios';
+import Spinner from '../../components/Spinner/Spinner';
 import Point from './Point';
 
-class SingleFullVenue extends Component{
+const SingleFullVenue = ({ match }) => {
+  const [resolveData, setResolveData] = useState({
+    singleVenue: {},
+    points: [],
+  });
+  const [checkIn, setCheckIn] = useState('');
+  const [checkOut, setCheckOut] = useState('');
+  const [numberOfGuests, setNumberOfGuests] = useState(1);
 
-    state = {
-        singleVenue: {},
-        points: [],
-        checkIn: "",
-        checkOut: "",
-        numberOfGuests: 1,
-    }
+  useEffect(() => {
+    const vId = match.params.vid;
+    const singleVenueUrl = `${window.apiHost}/venue/${vId}`;
+    const pointsUrl = `${window.apiHost}/points/get`;
 
-    async componentDidMount(){
-        const vId = this.props.match.params.vid;
-        const url = `${window.apiHost}/venue/${vId}`;
-        const axiosResponse = await axios.get(url);
-        const singleVenue = axiosResponse.data;
+    const resolveDataPromises = [];
 
-        const pointsUrl = `${window.apiHost}/points/get`;
-        const pointsAxiosResponse = await axios.get(pointsUrl);
-        
-        const points = singleVenue.points.split(',').map((point,i)=>{
-            return(<Point key={i} pointDesc={pointsAxiosResponse.data} point={point} /> )
-        })
-        this.setState({singleVenue,points});
-    }
+    resolveDataPromises.push(axios.get(singleVenueUrl));
+    resolveDataPromises.push(axios.get(pointsUrl));
 
-    changeNumberOfGuests = (e)=>{this.setState({numberOfGuests: e.target.value})}
-    changeCheckIn = (e)=>{this.setState({checkIn: e.target.value})}
-    changeCheckOut = (e)=>{this.setState({checkOut: e.target.value})}
+    Promise.all(resolveDataPromises).then((data) => {
+      const singleVenue = data[0].data;
+      const points = data[1].data;
+      console.log(singleVenue);
+      console.log(points);
+      setResolveData({
+        singleVenue,
+        points,
+      });
+    });
+  }, [match]);
 
-    reserveNow = (e)=>{
-        console.log("User wants to reserve!")
-    }
+  const changeNumberOfGuests = (e) => {
+    setNumberOfGuests(e.target.value);
+  };
+  const changeCheckIn = (e) => {
+    setCheckIn(e.target.value);
+  };
+  const changeCheckOut = (e) => {
+    setCheckOut(e.target.value);
+  };
 
-    render(){
-        console.log(this.state.singleVenue);
-        const sv = this.state.singleVenue;
-        return(
-            <div className="row single-venue">
-                <div className="col s12 center">
-                    <img src={sv.imageUrl} alt={sv.imageUrl} />
-                </div>
-                <div className="col s8 location-details offset-s2">
-                    <div className="col s8 left-details">
-                        <div className="location">{sv.location}</div>
-                        <div className="title">{sv.title}</div>
-                        <div className="guests">{sv.guests}</div>
+  const reserveNow = (e) => {
+    console.log('User wants to reserve!');
+  };
 
-                        <div className="divider"></div>
+  const {
+    imageUrl,
+    location,
+    title,
+    guests,
+    details,
+    amenities,
+    rating,
+    pricePerNight,
+  } = resolveData.singleVenue;
 
-                        {this.state.points}
+  const { points } = resolveData.points;
 
-                        <div className="details">{sv.details}</div>
-                        <div className="amenities">{sv.amenities}</div>
-                    </div>
+  if (!resolveData.singleVenue || resolveData.points.length === 0) {
+    return <Spinner />;
+  }
 
-                    <div className="col s4 right-details">
-                        <div className="price-per-day">${sv.pricePerNight} <span>per day</span></div>
-                        <div className="rating">{sv.rating}</div>
-                        <div className="col s6">
-                            Check-In
-                            <input type="date" onChange={this.changeCheckIn} value={this.state.checkIn} />
-                        </div>
-                        <div className="col s6">
-                            Check-Out
-                            <input type="date" onChange={this.changeCheckOut} value={this.state.checkOut} />
-                        </div>     
+  return (
+    <div className='row single-venue'>
+      <div className='col s12 center'>
+        <img src={imageUrl} alt={imageUrl} />
+      </div>
+      <div className='col s8 location-details offset-s2'>
+        <div className='col s8 left-details'>
+          <div className='location'>{location}</div>
+          <div className='title'>{title}</div>
+          <div className='guests'>{guests}</div>
 
-                        <div className="col s12">
-                            <select className="browser-default" onChange={this.changeNumberOfGuests} value={this.state.numberOfGuests}>
-                                <option value="1">1 Guest</option>
-                                <option value="2">2 Guest</option>
-                                <option value="3">3 Guest</option>
-                                <option value="4">4 Guest</option>
-                                <option value="5">5 Guest</option>
-                                <option value="6">6 Guest</option>
-                                <option value="7">7 Guest</option>
-                                <option value="8">8 Guest</option>
-                            </select>
-                        </div>
-                        <div className="col s12 center">
-                            <button onClick={this.reserveNow} className="btn red accent-2">Reserve</button>   
-                        </div>            
-                    </div>
+          <div className='divider'></div>
 
-                </div>
-            </div>
-        )
-    }
-}
+          {points &&
+            points
+              .split(',')
+              .map((point, i) => (
+                <Point key={i} pointDesc={points} point={point} />
+              ))}
+
+          <div className='details'>{details}</div>
+          <div className='amenities'>{amenities}</div>
+        </div>
+
+        <div className='col s4 right-details'>
+          <div className='price-per-day'>
+            ${pricePerNight} <span>per day</span>
+          </div>
+          <div className='rating'>{rating}</div>
+          <div className='col s6'>
+            Check-In
+            <input type='date' onChange={changeCheckIn} value={checkIn} />
+          </div>
+          <div className='col s6'>
+            Check-Out
+            <input type='date' onChange={changeCheckOut} value={checkOut} />
+          </div>
+
+          <div className='col s12'>
+            <select
+              className='browser-default'
+              onChange={changeNumberOfGuests}
+              value={numberOfGuests}
+            >
+              <option value='1'>1 Guest</option>
+              <option value='2'>2 Guest</option>
+              <option value='3'>3 Guest</option>
+              <option value='4'>4 Guest</option>
+              <option value='5'>5 Guest</option>
+              <option value='6'>6 Guest</option>
+              <option value='7'>7 Guest</option>
+              <option value='8'>8 Guest</option>
+            </select>
+          </div>
+          <div className='col s12 center'>
+            <button onClick={reserveNow} className='btn red accent-2'>
+              Reserve
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default SingleFullVenue;

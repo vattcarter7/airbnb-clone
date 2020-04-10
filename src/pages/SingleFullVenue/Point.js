@@ -1,16 +1,15 @@
-import React from "react";
+import React from 'react';
 
-function Point(props) {
-  const descObj = props.pointDesc.find(
-    (point) => point.pointTitle === props.point
-  );
+const Point = ({ pointDesc, point }) => {
+  const descObj = pointDesc.find((p) => p.pointTitle === point);
+  console.log(descObj)
 
   return (
     <div>
-      <div className='point-title'>{props.point}</div>
+      <div className='point-title'>{point}</div>
       <div className='point-desc'>{descObj.text}</div>
     </div>
   );
-}
+};
 
 export default Point;
