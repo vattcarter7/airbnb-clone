@@ -39,14 +39,14 @@ const NavBar = ({ location, openModal }) => {
                   openModal('open', <SignUp />);
                 }}
               >
-                Sign up
+                <Link to='/'> Sign up</Link>
               </li>
               <li
                 onClick={() => {
                   openModal('open', <Login />);
                 }}
               >
-                Log in
+              <Link to='/'> Log in</Link>
               </li>
             </ul>
           </div>
