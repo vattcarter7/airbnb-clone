@@ -26,6 +26,10 @@
     padding: 15px;
 }
 
+.notfound {
+    margin-top: 200px;
+}
+
 .right-details .price-per-day{
     font-size: 18px;
     font-weight: 800;

@@ -32,6 +32,7 @@ const SingleFullVenue = ({ match }) => {
         singleVenue,
         allPoints,
       });
+      console.log(singleVenue)
     });
   }, [match]);
 
@@ -66,6 +67,10 @@ const SingleFullVenue = ({ match }) => {
   if (!resolveData.singleVenue || resolveData.allPoints.length === 0) {
     return <Spinner />;
   }
+
+  // we got the response 'badID' when there is no single Venue found from the api
+  if (resolveData.singleVenue === 'badID')
+    return <h3 className='col s12 center notfound' >Venue not found</h3>
 
   return (
     <div className='row single-venue'>

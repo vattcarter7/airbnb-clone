@@ -1,3 +1,8 @@
+.nav-wrapper {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
 .nav{
     position: absolute;
     width: 100%;
@@ -7,6 +12,7 @@
 
 .nav nav{
     box-shadow: none;
+    margin-right: 10px !important;
 }
 
 .nav ul li{
